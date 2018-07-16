@@ -1,0 +1,35 @@
+Execution context in detail
+
+- creation phase:
+  -- a) creation of the VO (variable object)
+    -- argument object is created containing all arguments that were passed into the function
+    <-- HOISTING
+    -- code is scanned for function declarations: for each function, properties are created in the VO, pointing to the function
+    -- code is scanned for variable declarations: for each variable, properties are created in the VO, and set to undefined
+    HOISTING -->
+  -- b) creation of the scope chain
+  -- c) determine the value of 'this' variable
+- execution phase:
+  -- code of the function that generated the current execution context is ran line by line
+
+Hoisting (creation phase)
+- makes properties and functions available before the execution actually starts
+- functions will always be defined
+- variables are only defined in execution
+- See 'LECTURE 39: Hoisting in practice' for this in practice
+
+Scope Chain (creation phase)
+- the answer to 'where can i access a variable?'
+- each new function creates a scope
+  -- other languages use if blocks/for/while loops, but not JS. Only functions
+- lexical Scoping
+  -- lexical: the position in which something is written in the code
+  -- a function written inside another function gets access to the scope of the
+    outer function
+  -- thus, with using recursion, nested functions can access variables declared in
+    the global VO
+
+The 'this' keyword
+- Regular function call: (default) 'this' points to the global object (the window object in the browser)
+- Method call: 'this' variable points to the object that is calling the method
+- ... is never given a value until a function where it is defined is actually called
