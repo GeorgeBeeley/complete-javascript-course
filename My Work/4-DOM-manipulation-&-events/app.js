@@ -16,10 +16,13 @@ roundScore = 0;
 activePlayer = 0; // 0: player 1, 1: player 2
 document.querySelector('.dice').style.display = 'none';
 diceDOM = document.querySelector('.dice');
+holdButtonDOM = document.querySelector('.btn-hold');
+newButtonDOM = document.querySelector('.btn-new');
+rollButtonDOM = document.querySelector('.btn-roll');
 
 /* 'roll' as an addEventListener argument is called a callback function:
   it is not called, but is referenced so that another method can call it */
-document.querySelector('.btn-roll').addEventListener('click', function() {
+rollButtonDOM.addEventListener('click', function() {
   diceDOM.style.display = 'block';
   dice = Math.floor(Math.random() * 6) + 1;
   diceDOM.src = 'dice-' + dice + '.png';
@@ -32,14 +35,14 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
   }
 });
 
-document.querySelector('.btn-hold').addEventListener('click', function() {
+holdButtonDOM.addEventListener('click', function() {
   scores[activePlayer] += activeScore();
   document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
   changePlayer();
   diceDOM.style.display = 'none';
 });
 
-document.querySelector('.btn-new').addEventListener('click', function() {
+newButtonDOM.addEventListener('click', function() {
   scores = [0, 0];
   roundScore = 0;
   activePlayer = 0;
