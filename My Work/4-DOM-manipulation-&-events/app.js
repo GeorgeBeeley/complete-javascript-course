@@ -17,21 +17,6 @@ activePlayer = 0; // 0: player 1, 1: player 2
 document.querySelector('.dice').style.display = 'none';
 diceDOM = document.querySelector('.dice');
 
-function newGame() {
-  scores = [0, 0];
-  roundScore = 0;
-  activePlayer = 0;
-  for (var i = 0; i < 2; i++) {
-    document.querySelector('#score-' + i).textContent = 0;
-    document.querySelector('#current-' + i).textContent = 0;
-  }
-  if (!document.querySelector('.player-0-panel').hasClass('active')) {
-    document.querySelector('.player-0-panel').addClass('active');
-    document.querySelector('.player-1-panel').classList.toggle('active');
-  }
-  document.querySelector('.dice').style.display = 'none';
-}
-
 /* 'roll' as an addEventListener argument is called a callback function:
   it is not called, but is referenced so that another method can call it */
 document.querySelector('.btn-roll').addEventListener('click', function() {
