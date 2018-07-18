@@ -27,7 +27,6 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
     roundScore = activeScore() + dice;
     document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + roundScore + '</em>';
   } else {
-    document.querySelector('#current-' + activePlayer).textContent = 0;
     changePlayer();
     document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + 0 + '</em>';
   }
@@ -36,7 +35,6 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 document.querySelector('.btn-hold').addEventListener('click', function() {
   scores[activePlayer] += activeScore();
   document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
-  document.querySelector('#current-' + activePlayer).textContent = 0;
   changePlayer();
   diceDOM.style.display = 'none';
 });
@@ -57,6 +55,7 @@ document.querySelector('.btn-new').addEventListener('click', function() {
 });
 
 function changePlayer() {
+  document.querySelector('#current-' + activePlayer).textContent = 0;
   activePlayer = (activePlayer === 1) ? 0 : 1;
   document.querySelector('.active').classList.toggle('active');
   document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
