@@ -76,6 +76,7 @@ function init() {
 }
 
 function changePlayer() {
+  roundScore = 0;
   document.querySelector('#current-' + activePlayer).textContent = 0;
   activePlayer = (activePlayer === 1) ? 0 : 1;
   document.querySelector('.active').classList.toggle('active');
