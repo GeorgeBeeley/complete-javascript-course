@@ -11,29 +11,10 @@ GAME RULES:
 
 var scores, roundScore, activePlayer, dice, limit, diceDOM;
 
-scores = [0, 0];
-roundScore = 0;
-activePlayer = 0; // 0: player 1, 1: player 2
-limit = 100;
-document.querySelector('.dice').style.display = 'none';
-diceDOM = document.querySelector('.dice');
-holdButtonDOM = document.querySelector('.btn-hold');
-newButtonDOM = document.querySelector('.btn-new');
-rollButtonDOM = document.querySelector('.btn-roll');
+init();
 
-function changePlayer() {
-  document.querySelector('#current-' + activePlayer).textContent = 0;
-  activePlayer = (activePlayer === 1) ? 0 : 1;
-  document.querySelector('.active').classList.toggle('active');
-  document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
-}
+newButtonDOM.addEventListener('click', init);
 
-var activeScore = function() {
-  return parseInt(document.querySelector('#current-' + activePlayer).textContent);
-}
-
-/* 'roll' as an addEventListener argument is called a callback function:
-  it is not called, but is referenced so that another method can call it */
 rollButtonDOM.addEventListener('click', function() {
   diceDOM.style.display = 'block';
   dice = Math.floor(Math.random() * 6) + 1;
@@ -48,7 +29,7 @@ rollButtonDOM.addEventListener('click', function() {
 });
 
 holdButtonDOM.addEventListener('click', function() {
-  scores[activePlayer] += activeScore();
+  scores[activePlayer] += roundScore;
   document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
   // player wins
@@ -64,20 +45,37 @@ holdButtonDOM.addEventListener('click', function() {
   }
 });
 
-newButtonDOM.addEventListener('click', function() {
+function init() {
   scores = [0, 0];
   roundScore = 0;
-  document.querySelector('#name-' + activePlayer).textContent = 'Player ' + (activePlayer + 1);
-  activePlayer = 0;
-  rollButtonDOM.disabled = false;
-  holdButtonDOM.disabled = false;
+  activePlayer = 0; // 0: player 1, 1: player 2
+  limit = 100;
+  document.querySelector('.dice').style.display = 'none';
+  diceDOM = document.querySelector('.dice');
+  holdButtonDOM = document.querySelector('.btn-hold');
+  newButtonDOM = document.querySelector('.btn-new');
+  rollButtonDOM = document.querySelector('.btn-roll');
   for (var i = 0; i < 2; i++) {
     document.querySelector('#score-' + i).textContent = 0;
     document.querySelector('#current-' + i).textContent = 0;
+    document.querySelector('#name-' + i).textContent = 'Player ' + (i + 1);
   }
   if (!document.querySelector('.player-0-panel').classList.contains('active')) {
-    document.querySelector('.player-0-panel').classList.add('active');
+    document.querySelector('.player-0-panel').classList.toggle('active');
     document.querySelector('.player-1-panel').classList.toggle('active');
   }
+  rollButtonDOM.disabled = false;
+  holdButtonDOM.disabled = false;
   diceDOM.style.display = 'none';
-});
+}
+
+function changePlayer() {
+  document.querySelector('#current-' + activePlayer).textContent = 0;
+  activePlayer = (activePlayer === 1) ? 0 : 1;
+  document.querySelector('.active').classList.toggle('active');
+  document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
+}
+
+var activeScore = function() {
+  return parseInt(document.querySelector('#current-' + activePlayer).textContent);
+}
