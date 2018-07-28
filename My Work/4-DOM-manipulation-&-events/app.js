@@ -2,14 +2,14 @@
 GAME RULES:
 
 - The game has 2 players, playing in rounds
-- In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
+- In each turn, a player rolls a diceOne as many times as he whishes. Each result get added to his ROUND score
 - BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
 
-var scores, roundScore, activePlayer, dice, limit, diceDOM, gamePlaying, lastRoll;
+var scores, roundScore, activePlayer, diceOne, diceTwo, limit, diceOneDOM, diceTwoDOM, gamePlaying, lastRoll;
 
 init();
 
@@ -17,21 +17,24 @@ newButtonDOM.addEventListener('click', init);
 rollButtonDOM.addEventListener('click', function() {
 
   if (gamePlaying) {
-    dice = Math.floor(Math.random() * 6) + 1;
-    diceDOM.style.display = 'block';
-    diceDOM.src = 'dice-' + dice + '.png';
+    diceOne = Math.floor(Math.random() * 6) + 1;
+    diceTwo = Math.floor(Math.random() * 6) + 1;
+    diceOneDOM.style.display = 'block';
+    diceOneDOM.src = 'dice-' + diceOne + '.png';
+    diceTwoDOM.style.display = 'block';
+    diceTwoDOM.src = 'dice-' + diceTwo + '.png';
 
-    if (dice !== 1) {
+    if (diceOne !== 1) {
       // if player rolls 2x6 in a row, score resets and turn changes
-      if (dice === 6 && lastRoll === 6) {
+      if (diceOne === 6 && lastRoll === 6) {
         scores[activePlayer] = 0;
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
         changePlayer();
         lastRoll = 0;
 
       } else {
-        lastRoll = dice;
-        roundScore = activeScore() + dice;
+        lastRoll = diceOne;
+        roundScore = activeScore() + diceOne;
         document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + roundScore + '</em>';
       }
 
@@ -50,13 +53,13 @@ holdButtonDOM.addEventListener('click', function() {
     // player wins
     if (scores[activePlayer] >= limit ) {
       document.querySelector('#name-' + activePlayer).textContent = 'winner';
-      diceDOM.style.display = 'none';
+      diceOneDOM.style.display = 'none';
       gamePlaying = false;
 
     // doesn't win, next player
     } else {
       changePlayer();
-      diceDOM.style.display = 'none';
+      diceOneDOM.style.display = 'none';
     }
   }
 
@@ -75,11 +78,13 @@ function init() {
     limit = customLimit;
   }
 
-  diceDOM = document.querySelector('.dice');
+  diceOneDOM = document.querySelector('.dice-1');
+  diceTwoDOM = document.querySelector('.dice-2');
   holdButtonDOM = document.querySelector('.btn-hold');
   newButtonDOM = document.querySelector('.btn-new');
   rollButtonDOM = document.querySelector('.btn-roll');
-  diceDOM.style.display = 'none';
+  diceOneDOM.style.display = 'none';
+  diceTwoDOM.style.display = 'none';
   gamePlaying = true;
 
   for (var i = 0; i < 2; i++) {
