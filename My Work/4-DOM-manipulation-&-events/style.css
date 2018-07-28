@@ -137,6 +137,34 @@ i {
     transition: margin 0.3s;
 }
 
+.winning-score label {
+  top: 80px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: Lato;
+  font-size: 20px;
+}
+
+.winning-score input {
+  position: absolute;
+  top: 110px;
+  width: 100px;
+  height: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #555;
+  background: #fff;
+  border: solid 1px #eee;
+  box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.1);
+  font-family: Lato;
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 300;
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
 .btn-new { top: 45px;}
 .btn-roll { top: 403px;}
 .btn-hold { top: 467px;}
