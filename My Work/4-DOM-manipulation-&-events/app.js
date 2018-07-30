@@ -74,11 +74,11 @@ rollButtonDOM.addEventListener('click', function() {
     activePlayer = 0; // 0: player 1, 1: player 2
 
     var customLimit = document.querySelector('#set-goal').value;
-    if (customLimit === '') {
+    if (customLimit) {
+      limit = customLimit;
+    } else {
       document.querySelector('#set-goal').value = defaultLimit;
       limit = defaultLimit;
-    } else {
-      limit = customLimit;
     }
 
     diceDOM = document.querySelector('.dice');
