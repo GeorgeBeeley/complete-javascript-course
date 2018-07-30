@@ -9,11 +9,13 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, diceOne, diceTwo, limit, diceOneDOM, diceTwoDOM, gamePlaying, lastRoll;
+var scores, roundScore, activePlayer, diceOne, diceTwo, defaultLimit, limit, diceOneDOM, diceTwoDOM, gamePlaying, lastRoll, diceState;
+
+defaultLimit = 100;
 
 init();
-
 newButtonDOM.addEventListener('click', init);
+
 rollButtonDOM.addEventListener('click', function() {
 
   if (gamePlaying) {
@@ -23,21 +25,30 @@ rollButtonDOM.addEventListener('click', function() {
     diceOneDOM.src = 'dice-' + diceOne + '.png';
     diceTwoDOM.style.display = 'block';
     diceTwoDOM.src = 'dice-' + diceTwo + '.png';
+    diceOneDOM.classList.remove('negative');
+    diceOneDOM.classList.remove('default');
+    diceOneDOM.classList.add('default');
+    diceTwoDOM.classList.remove('negative');
+    diceTwoDOM.classList.remove('default');
+    diceTwoDOM.classList.add('default');
 
-    if (diceOne !== 1) {
-      // if player rolls 2x6 in a row, score resets and turn changes
-      if (diceOne === 6 && lastRoll === 6) {
-        scores[activePlayer] = 0;
-        document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
-        changePlayer();
-        lastRoll = 0;
+    // if player rolls 2x6 in a row, score resets and turn changes
+    if ((diceOne === 6 || diceTwo === 6) && lastRoll === 6) {
+      scores[activePlayer] = 0;
+      document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+      diceOneDOM.classList.remove('default');
+      diceOneDOM.classList.add('negative');
+      diceTwoDOM.classList.remove('default');
+      diceTwoDOM.classList.add('negative');
+      changePlayer();
 
-      } else {
-        lastRoll = diceOne;
-        roundScore = activeScore() + diceOne;
-        document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + roundScore + '</em>';
-      }
+      // if player rolls anything but a 1
+    } else if (diceOne !== 1 && diceTwo !== 1) {
+      lastRoll = (diceOne === 6 || diceTwo === 6) ? 6 : null;
+      roundScore = activeScore() + diceOne + diceTwo;
+      document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + roundScore + '</em>';
 
+      // if the player rolls a 1
     } else {
       changePlayer();
     }
@@ -54,12 +65,14 @@ holdButtonDOM.addEventListener('click', function() {
     if (scores[activePlayer] >= limit ) {
       document.querySelector('#name-' + activePlayer).textContent = 'winner';
       diceOneDOM.style.display = 'none';
+      diceTwoDOM.style.display = 'none';
       gamePlaying = false;
 
-    // doesn't win, next player
+      // doesn't win, next player
     } else {
       changePlayer();
       diceOneDOM.style.display = 'none';
+      diceTwoDOM.style.display = 'none';
     }
   }
 
@@ -71,15 +84,15 @@ function init() {
   activePlayer = 0; // 0: player 1, 1: player 2
 
   var customLimit = document.querySelector('#set-goal').value;
-  if (customLimit === '') {
-    document.querySelector('#set-goal').value = 100;
-    limit = 100;
-  } else {
+  if (customLimit) {
     limit = customLimit;
+  } else {
+    document.querySelector('#set-goal').value = defaultLimit;
+    limit = defaultLimit;
   }
 
-  diceOneDOM = document.querySelector('.dice-1');
-  diceTwoDOM = document.querySelector('.dice-2');
+  diceOneDOM = document.querySelector('#dice-1');
+  diceTwoDOM = document.querySelector('#dice-2');
   holdButtonDOM = document.querySelector('.btn-hold');
   newButtonDOM = document.querySelector('.btn-new');
   rollButtonDOM = document.querySelector('.btn-roll');
@@ -101,6 +114,7 @@ function init() {
 
 function changePlayer() {
   roundScore = 0;
+  lastRoll = 0;
   document.querySelector('#current-' + activePlayer).textContent = 0;
   activePlayer = (activePlayer === 1) ? 0 : 1;
   document.querySelector('.active').classList.toggle('active');
