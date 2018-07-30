@@ -1,0 +1,32 @@
+Everything is an object (nearly)
+
+# Primitives
+- numbers
+- strings
+- booleans
+- undefined
+- null
+
+# Objects (everything else...)
+- arrays
+- functions
+- objects
+- dates
+- wrappers for numbers, strings, booleans
+
+# Constructors / Prototypes (classes)
+- known in other languages as classes
+- 'blueprint' for an object
+- used to create 'instances'
+
+# Inheritance
+- inherited objects must be included in the Prototype of the ascestral object
+- the prototype property of an object is where we put the methods and properties
+  that we want other objects to inherit
+- Person's prototype property is the prototype of John, not of Person
+
+# Prototype chain
+- every object we create inherits the objects and methods of the Object object's prototype
+- all objects will therefore inherit the prototype methods and objects of the Object object
+- when searching an object for a method when it's called on it, it will search the objects methods,
+  then search the objects prototypes methods, and so on up the prototype chain
