@@ -9,100 +9,107 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, dice, limit, diceDOM, gamePlaying, lastRoll;
+var scores, roundScore, activePlayer, dice, defaultLimit, limit, diceDOM, gamePlaying, lastRoll, diceState;
+
+defaultLimit = 100;
 
 init();
-
 newButtonDOM.addEventListener('click', init);
+
 rollButtonDOM.addEventListener('click', function() {
 
   if (gamePlaying) {
     dice = Math.floor(Math.random() * 6) + 1;
     diceDOM.style.display = 'block';
     diceDOM.src = 'dice-' + dice + '.png';
+    diceDOM.classList.remove('negative');
+    diceDOM.classList.remove('default');
+    diceDOM.classList.add('default');
 
-    if (dice !== 1) {
-      // if player rolls 2x6 in a row, score resets and turn changes
-      if (dice === 6 && lastRoll === 6) {
-        scores[activePlayer] = 0;
-        document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
-        changePlayer();
-        lastRoll = 0;
+    // if player rolls 2x6 in a row, score resets and turn changes
+    if (dice === 6 && lastRoll === 6) {
+      scores[activePlayer] = 0;
+      document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+      diceDOM.classList.remove('default');
+      diceDOM.classList.add('negative');
+      changePlayer();
 
+    // if player rolls anything but a 1
+    } else if (dice !== 1) {
+      lastRoll = dice;
+      roundScore = activeScore() + dice;
+      document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + roundScore + '</em>';
+
+    // if the player rolls a 1
+    } else {
+      changePlayer();
+    }
+  }
+});
+
+  holdButtonDOM.addEventListener('click', function() {
+    if (gamePlaying) {
+
+      scores[activePlayer] += roundScore;
+      document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+
+      // player wins
+      if (scores[activePlayer] >= limit ) {
+        document.querySelector('#name-' + activePlayer).textContent = 'winner';
+        diceDOM.style.display = 'none';
+        gamePlaying = false;
+
+        // doesn't win, next player
       } else {
-        lastRoll = dice;
-        roundScore = activeScore() + dice;
-        document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + roundScore + '</em>';
+        changePlayer();
+        diceDOM.style.display = 'none';
       }
+    }
 
+  });
+
+  function init() {
+    scores = [0, 0];
+    roundScore = 0;
+    activePlayer = 0; // 0: player 1, 1: player 2
+
+    var customLimit = document.querySelector('#set-goal').value;
+    if (customLimit === '') {
+      document.querySelector('#set-goal').value = defaultLimit;
+      limit = defaultLimit;
     } else {
-      changePlayer();
+      limit = customLimit;
+    }
+
+    diceDOM = document.querySelector('.dice');
+    holdButtonDOM = document.querySelector('.btn-hold');
+    newButtonDOM = document.querySelector('.btn-new');
+    rollButtonDOM = document.querySelector('.btn-roll');
+    diceDOM.style.display = 'none';
+    gamePlaying = true;
+
+    for (var i = 0; i < 2; i++) {
+      document.querySelector('#score-' + i).textContent = 0;
+      document.querySelector('#current-' + i).textContent = 0;
+      document.querySelector('#name-' + i).textContent = 'Player ' + (i + 1);
+    }
+
+    if (!document.querySelector('.player-0-panel').classList.contains('active')) {
+      document.querySelector('.player-0-panel').classList.toggle('active');
+      document.querySelector('.player-1-panel').classList.toggle('active');
     }
   }
-});
 
-holdButtonDOM.addEventListener('click', function() {
-  if (gamePlaying) {
-
-    scores[activePlayer] += roundScore;
-    document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
-
-    // player wins
-    if (scores[activePlayer] >= limit ) {
-      document.querySelector('#name-' + activePlayer).textContent = 'winner';
-      diceDOM.style.display = 'none';
-      gamePlaying = false;
-
-    // doesn't win, next player
-    } else {
-      changePlayer();
-      diceDOM.style.display = 'none';
-    }
+  function changePlayer() {
+    roundScore = 0;
+    lastRoll = 0;
+    document.querySelector('#current-' + activePlayer).textContent = 0;
+    activePlayer = (activePlayer === 1) ? 0 : 1;
+    document.querySelector('.active').classList.toggle('active');
+    document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
+    document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + 0 + '</em>';
   }
 
-});
-
-function init() {
-  scores = [0, 0];
-  roundScore = 0;
-  activePlayer = 0; // 0: player 1, 1: player 2
-
-  var customLimit = document.querySelector('#set-goal').value;
-  if (customLimit === '') {
-    document.querySelector('#set-goal').value = 100;
-    limit = 100;
-  } else {
-    limit = customLimit;
+  var activeScore = function() {
+    return parseInt(document.querySelector('#current-' + activePlayer).textContent);
   }
-
-  diceDOM = document.querySelector('.dice');
-  holdButtonDOM = document.querySelector('.btn-hold');
-  newButtonDOM = document.querySelector('.btn-new');
-  rollButtonDOM = document.querySelector('.btn-roll');
-  diceDOM.style.display = 'none';
-  gamePlaying = true;
-
-  for (var i = 0; i < 2; i++) {
-    document.querySelector('#score-' + i).textContent = 0;
-    document.querySelector('#current-' + i).textContent = 0;
-    document.querySelector('#name-' + i).textContent = 'Player ' + (i + 1);
-  }
-
-  if (!document.querySelector('.player-0-panel').classList.contains('active')) {
-    document.querySelector('.player-0-panel').classList.toggle('active');
-    document.querySelector('.player-1-panel').classList.toggle('active');
-  }
-}
-
-function changePlayer() {
-  roundScore = 0;
-  document.querySelector('#current-' + activePlayer).textContent = 0;
-  activePlayer = (activePlayer === 1) ? 0 : 1;
-  document.querySelector('.active').classList.toggle('active');
-  document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
-  document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + 0 + '</em>';
-}
-
-var activeScore = function() {
-  return parseInt(document.querySelector('#current-' + activePlayer).textContent);
-}
